@@ -1,4 +1,5 @@
-include_defs('//lib/maven.defs')
+include_defs('//bucklets/gerrit_plugin.bucklet')
+include_defs('//bucklets/maven_jar.bucklet')
 define_license('scribe')
 
 gerrit_plugin(
@@ -8,9 +9,18 @@ gerrit_plugin(
   manifest_entries = [
     'Gerrit-PluginName: gerrit-oauth-provider',
     'Gerrit-HttpModule: com.googlesource.gerrit.plugins.oauth.HttpModule',
+    'Gerrit-InitStep: com.googlesource.gerrit.plugins.oauth.InitOAuth',
+    'Implementation-Title: Gerrit OAuth authentication provider',
+    'Implementation-URL: https://github.com/davido/gerrit-oauth-provider',
   ],
-  provided_deps = ['//lib:gson'],
-  deps = [':scribe-oauth'],
+  deps = [
+    ':scribe'
+  ],
+  provided_deps = [
+    '//lib:guava',
+    '//lib:gson',
+    '//lib/commons:codec',
+  ],
 )
 
 java_library(
@@ -19,7 +29,7 @@ java_library(
 )
 
 maven_jar(
-  name = 'scribe-oauth',
+  name = 'scribe',
   id = 'org.scribe:scribe:1.3.7',
   sha1 = '583921bed46635d9f529ef5f14f7c9e83367bc6e',
   license = 'scribe',
