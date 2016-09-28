@@ -25,10 +25,14 @@ class InitOAuth implements InitStep {
   static final String CLIENT_SECRET = "client-secret";
   static final String LINK_TO_EXISTING_OPENID_ACCOUNT =
       "link-to-existing-openid-accounts";
+  static final String DOMAIN = "domain";
+  static final String USE_EMAIL_AS_USERNAME =
+      "use-email-as-username";
 
   private final ConsoleUI ui;
   private final Section googleOAuthProviderSection;
   private final Section githubOAuthProviderSection;
+  private final Section bitbucketOAuthProviderSection;
 
   @Inject
   InitOAuth(ConsoleUI ui,
@@ -39,6 +43,8 @@ class InitOAuth implements InitStep {
         PLUGIN_SECTION, pluginName + GoogleOAuthService.CONFIG_SUFFIX);
     this.githubOAuthProviderSection = sections.get(
         PLUGIN_SECTION, pluginName + GitHubOAuthService.CONFIG_SUFFIX);
+    this.bitbucketOAuthProviderSection = sections.get(
+        PLUGIN_SECTION, pluginName + BitbucketOAuthService.CONFIG_SUFFIX);
   }
 
   @Override
@@ -58,6 +64,12 @@ class InitOAuth implements InitStep {
         true, "Use GitHub OAuth provider for Gerrit login ?");
     if (configueGitHubOAuthProvider) {
       configureOAuth(githubOAuthProviderSection);
+    }
+
+    boolean configureBitbucketOAuthProvider = ui.yesno(
+        true, "Use Bitbucket OAuth provider for Gerrit login ?");
+    if (configureBitbucketOAuthProvider) {
+      configureOAuth(bitbucketOAuthProviderSection);
     }
   }
 
